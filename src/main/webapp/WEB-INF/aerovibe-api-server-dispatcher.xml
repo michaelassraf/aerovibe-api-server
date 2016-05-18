@@ -1,0 +1,54 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd 
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+    <context:component-scan base-package="com.lbis.aerovibe.spring.common.controllers, 
+                                          com.lbis.aerovibe.spring.common.location.geoip,
+                                          com.lbis.aerovibe.spring.common.location.geoip2,
+                                          com.lbis.aerovibe.spring.common.http.get,
+                                          com.lbis.aerovibe.spring.common.mapping,
+                                          com.lbis.aerovibe.spring.common.couchbase,
+                                          com.lbis.aerovibe.spring.common.couchbase.executors, 
+                                          com.lbis.aerovibe.spring.common.services,
+                                          com.lbis.aerovibe.api.server.views,
+                                          com.lbis.aerovibe.spring.common.concurrency,
+                                          com.lbis.aerovibe.spring.common.token" />
+    
+    <context:property-placeholder location="classpath:aerovibe-api-server.properties" />
+    <task:annotation-driven/>
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="com.lbis.aerovibe.spring.common.mapping.GsonMessageConverter" />
+            <bean
+                class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                <property name="prefixJson" value="false" />
+            </bean>
+            <bean class="org.springframework.http.converter.BufferedImageHttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/pages/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="10000000" />
+    </bean>
+    
+</beans>
